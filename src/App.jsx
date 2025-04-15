@@ -27,6 +27,7 @@ export default function App() {
       <h1 className="text-3xl font-bold underline text-center">
         Welcome to Our React Series with Chai aur Code
       </h1>
+      
     </>
   ) : null  
 }

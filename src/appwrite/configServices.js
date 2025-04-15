@@ -33,90 +33,86 @@ export class Services {
     }
   }
 
-  async updatePost(slug, {title, content, status, featuredImage}){
+  async updatePost(slug, { title, content, status, featuredImage }) {
     try {
-        return await this.databases.updateDocument(config.appwriteDatabaseId, config.appwriteCollectionId,slug, {
-            title,
-            content,
-            status,
-            featuredImage,
-        })
+      return await this.databases.updateDocument(
+        config.appwriteDatabaseId,
+        config.appwriteCollectionId,
+        slug,
+        {
+          title,
+          content,
+          status,
+          featuredImage,
+        }
+      );
     } catch (error) {
-        throw new Error("Error updating post: " + error.message);
+      throw new Error("Error updating post: " + error.message);
     }
   }
 
-  async deletePost(slug){
+  async deletePost(slug) {
     try {
-         await this.databases.deleteDocument(
-            config.appwriteDatabaseId,
-            config.appwriteCollectionId,
-            slug    
-        
-        )
-        return true;
+      await this.databases.deleteDocument(
+        config.appwriteDatabaseId,
+        config.appwriteCollectionId,
+        slug
+      );
+      return true;
     } catch (error) {
-         throw new Error("Error deleting post: " + error.message);
+      throw new Error("Error deleting post: " + error.message);
     }
   }
 
-  async getPost(slug){
+  async getPost(slug) {
     try {
-        return await this.databases.getDocument(
-            config.appwriteDatabaseId,
-            config.appwriteCollectionId,
-            slug
-        )
+      return await this.databases.getDocument(
+        config.appwriteDatabaseId,
+        config.appwriteCollectionId,
+        slug
+      );
     } catch (error) {
-         throw new Error("Error getting post: " + error.message);
+      throw new Error("Error getting post: " + error.message);
     }
   }
 
-  async getPosts(queries = [Query.equal("status", "active")]){
+  async getPosts(queries = [Query.equal("status", "active")]) {
     try {
-        await this.databases.listDocuments(
-            config.appwriteDatabaseId,
-            config.appwriteCollectionId,
-            queries
-        )
+      await this.databases.listDocuments(
+        config.appwriteDatabaseId,
+        config.appwriteCollectionId,
+        queries
+      );
     } catch (error) {
-         throw new Error("Error getting posts: " + error.message);
+      throw new Error("Error getting posts: " + error.message);
     }
   }
 
-//   file upload service
+  //   file upload service
 
-async createFile(file) {
+  async uploadFile(file) {
     try {
-        return await this.storage.createFile(
-            config.appwriteBucketId,
-            file
-        )
+      return await this.storage.createFile(config.appwriteBucketId, file);
+    } catch (error) {}
+  }
+
+  async deleteFile(fileId) {
+    try {
+      return await this.storage.deleteFile(config.appwriteBucketId, fileId);
     } catch (error) {
-        
+      throw new Error("Error deleting file: " + error.message);
     }
-}
+  }
 
-async deleteFile(fileId){
+  getFilePreview(fileId) {
     try {
-        return await this.storage.deleteFile(
-            config.appwriteBucketId,
-            fileId
-        )
+      return this.storage.getFilePreview(config.appwriteBucketId, fileId);
     } catch (error) {
-         throw new Error("Error deleting file: " + error.message);
-    }   
-}
-
- getFilePreview(fileId){
-    try {
-        return  this.storage.getFilePreview(
-            config.appwriteBucketId,
-            fileId
-        )
-    } catch (error) {
-         throw new Error("Error getting file preview: " + error.message);
+      throw new Error("Error getting file preview: " + error.message);
     }
+  }
 }
 
-}
+const services = new Services();
+
+export default services;
