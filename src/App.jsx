@@ -3,6 +3,8 @@ import { useDispatch } from 'react-redux';
 import { useState, useEffect } from 'react';
 import {login, logout} from './store/authSlice'
 import authService from './appwrite/authServices';
+import { Footer, Header } from './components';
+import { Outlet } from 'react-router-dom';
 
 export default function App() {
   const [loading, setLoading] = useState(true);
@@ -23,11 +25,14 @@ export default function App() {
   }, [])
   
   return !loading ? (
-    <>
-      <h1 className="text-3xl font-bold underline text-center">
-        Welcome to Our React Series with Chai aur Code
-      </h1>
-      
-    </>
+    <div className='min-h-screen flex flex-wrap content-between bg-gray-400'>
+      <div className='w-full block'>
+        <Header />
+        <main>
+          <Outlet />
+        </main>
+        <Footer />
+      </div>
+    </div>
   ) : null  
 }

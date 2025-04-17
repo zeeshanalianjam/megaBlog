@@ -3,10 +3,11 @@ import { useForm } from "react-hook-form";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import services from "../../appwrite/configServices";
+import {Input , RTE, Select, Button} from '../index'
 
 const PostForm = ({ post }) => {
   const { register, handleSubmit, watch, setValue, getValues, control } =
-    useForm({
+    useForm({ 
       defaultValues: {
         title: post?.title || "",
         content: post?.content || "",
@@ -20,7 +21,7 @@ const PostForm = ({ post }) => {
 
   const submit = async (data) => {
     if (post) {
-      const file = data.image[0] ? services.uploadFile(data.image[0]) : null;
+      const file = data.image[0] ? await services.uploadFile(data.image[0]) : null;
 
       if (file) {
         services.deleteFile(post.featuredImage);
@@ -39,7 +40,7 @@ const PostForm = ({ post }) => {
 
       if (file) {
         const fileId = file.$id;
-        post.featuredImage = fileId;
+        data.featuredImage = fileId;  
         const dbPost = await services.createPost({
           ...data,
           userId: userData.$id,
@@ -56,10 +57,10 @@ const PostForm = ({ post }) => {
     if(value && typeof value === 'string'){
 
       return value
-      .toString()
+      .trim()
       .toLowerCase()
-      .replace(/^[a-zA-Z\d\s]+/g, '-')
-      .replace(/\s/g, '-') 
+      .replace(/[^a-zA-Z\d\s]+/g, "-")
+      .replace(/\s/g, "-");
     }
 
   return '';
